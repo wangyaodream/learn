@@ -1,0 +1,41 @@
+# for windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+
+# For Mac
+.DS_Store
+.-*
+
+
+# Python
+*.py[cod]
+*.so
+*.egg
+*.egg-info
+dist
+build
+__pycache__
+
+
+# Pycharm
+/.idea/
+
+
+# Customer
+test
+temp
+out
+new_out
+log
+photo
+db
+test.py
+db_config.json
+main_config.py
+test_data.json
+main.py
+result
+/venv/
+output
