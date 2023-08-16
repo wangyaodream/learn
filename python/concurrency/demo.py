@@ -18,3 +18,5 @@ async def main() -> None:
 
 # 
 asyncio.run(main())
+
+print("Real done!")
