@@ -13,7 +13,7 @@ def async_timed():
                 return await func(*args, **kwargs)
             finally:
                 end = time.time()
-                total = end - start
-                print(f'finished {func} in {total:.4f} second(s)')
+                total =  end - start
+                print(f'finished {func} in {total:4f} second(s)')
         return wrapped
     return wrapper
