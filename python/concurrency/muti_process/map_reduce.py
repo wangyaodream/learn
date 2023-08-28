@@ -21,6 +21,7 @@ def merge_dictionaries(first: Dict[str, int],
             merged[key] = merged[key] + second[key]
         else:
             merged[key] = second[key]
+    return merged
     
 
 lines = [
