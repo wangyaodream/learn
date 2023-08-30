@@ -51,4 +51,22 @@ class LoadTester(Tk):
     def _poll_queue(self):
         if not self._queue.empty():
             precent_complete = self._queue.get()
-
+            self._update_bar(precent_complete)
+        else:
+            if self._load_test:
+                self.after(self._refresh_ms, self._poll_queue)
+    
+    def _start(self):
+        if self._load_test:
+            self._load_test.stop()
+            self._load_test = None
+            self._submit['text'] = 'Submit'
+        else:
+            self._load_test = StressTest(
+                self._loop,
+                self._url_entry.get(),
+                int(self._requests_field.get()),
+                self._queue_update
+            )
+            self._load_test.start()
+            self._submit['text'] = 'Cancel'
