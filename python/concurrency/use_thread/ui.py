@@ -20,7 +20,7 @@ class LoadTester(Tk):
         self._url_label.grid(row=0, column=0)
 
         self._url_entry = Entry(self, width=10)
-        self._url_entry.grid(row=1, column=0)
+        self._url_entry.grid(row=0, column=1)
 
         self._requests_label = Label(self, text='Requests:')
         self._requests_label.grid(row=1, column=0)
@@ -58,7 +58,8 @@ class LoadTester(Tk):
     
     def _start(self):
         if self._load_test:
-            self._load_test.stop()
+            # 为空的情况
+            self._load_test.cancel()
             self._load_test = None
             self._submit['text'] = 'Submit'
         else:
@@ -68,5 +69,6 @@ class LoadTester(Tk):
                 int(self._requests_field.get()),
                 self._queue_update
             )
+            self.after(self._refresh_ms, self._poll_queue)
             self._load_test.start()
             self._submit['text'] = 'Cancel'
