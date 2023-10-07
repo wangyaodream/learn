@@ -32,6 +32,6 @@ class HTTPGetClientProtocol(asyncio.Protocol):
     
     def connection_lost(self, exc: Optional[Exception]) -> None:
         if exc is None:
-            print(f'Connection closed')
+            print(f'Connection closed without error.')
         else:
             self._future.set_exception(exc)

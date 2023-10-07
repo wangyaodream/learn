@@ -26,6 +26,6 @@ func main() {
 func check(e any) {
     if e != nil {
         fmt.Printf("Program stopping with error: %v", e)
-        os.Exit(20)
+        os.Exit(1)
     }
 }
