@@ -1,3 +1,4 @@
+import os
 import asyncpg
 import asyncio
 
@@ -63,11 +64,11 @@ SIZE_INSERT = \
 
 
 async def main():
-    connection = await asyncpg.connect(host='blog.trojancow.top',
+    connection = await asyncpg.connect(host=os.getenv("PG_HOST"),
                                        port=5432,
-                                       user='postgres',
-                                       database='products',
-                                       password='Dream462213925')
+                                       user=os.getenv("PG_USER"),
+                                       database=os.getenv("PG_DATABASE"),
+                                       password=os.getenv("PG_PASSWORD"))
     statements = [
         CREATE_BRAND_TABLE,
         CREATE_PRODUCT_TABLE,
