@@ -77,5 +77,4 @@ app = web.Application()
 app.on_startup.append(create_database_pool)
 app.on_cleanup.append(destory_database_pool)
 app.add_routes(routes)
-web.run_app(app)
-    
+web.run_app(app, port=8000)
