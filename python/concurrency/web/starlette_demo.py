@@ -10,9 +10,9 @@ from typing import List, Dict
 
 
 async def create_database_pool():
-    pool: Pool = await asyncpg.create_pool(host=os.getenv("PG_HOST"),
-                                     user=os.getenv("PG_USER"),
-                                     password=os.getenv("PG_PASSWORD"),
+    pool: Pool = await asyncpg.create_pool(host="127.0.0.1",
+                                     user="postgres",
+                                     password="Dream462213925",
                                      port=5432,
                                      database="products",
                                      min_size=6,
