@@ -22,6 +22,10 @@ class TestMathFunc(unittest.TestCase):
         self.assertEqual(10, divide(50, 5))
         self.assertEqual(2.5, divide(5, 2))
 
+    @unittest.skip("I don't want to run this case.")
+    def test_skip(self):
+        self.assertEqual(10, divide(50, 5))
+        self.assertEqual(2.5, divide(5, 2))
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(verbosity=2)
