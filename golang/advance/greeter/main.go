@@ -27,7 +27,7 @@ func printUsage(w io.Writer) {
 
 func validateArgs(c config) error {
     if !(c.numTimes > 0) {
-        return errors.New("Must specify a number greater than 0")
+        return errors.New("Must specify a number greeter than 0")
     } 
 
     return nil
@@ -58,7 +58,7 @@ func parseArgs(args []string) (config, error) {
 
 // 用户输入姓名
 func getName(r io.Reader, w io.Writer) (string, error) {
-    msg := "Your name please? press the Enter key when done.\n"
+    msg := "Your name please?Press the Enter key when done.\n"
     fmt.Fprintf(w, msg)
 
     // 获取输入内容
