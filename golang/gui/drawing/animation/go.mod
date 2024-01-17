@@ -1,4 +1,4 @@
-module box
+module canvas_animation
 
 go 1.21.0
 
