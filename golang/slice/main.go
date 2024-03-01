@@ -4,20 +4,28 @@ import "fmt"
 
 
 func main() {
-    fmt.Println("Start:")
-    slice := []int{10,20,30,40}
+    arrayA := [2]int {100, 200}
+    var arrayB [2]int
 
-    for index, value := range slice {
-        fmt.Printf("Value: %d Value-addr: %x ElemAddr: %x\n", 
-        value, &value, &slice[index])
-    }
+    arrayB = arrayA
+    
+    fmt.Printf("arrayA: %p, %v\n", &arrayA, arrayA)
+    fmt.Printf("arrayB: %p, %v\n", &arrayB, arrayB)
 
-    // traditional for loop
-    fmt.Println("Traditional:")
-    for index := 2; index < len(slice); index++ {
-        fmt.Printf("Index %d Value: %d\n", index, slice[index])
-    }
+    testArray(arrayA)
+    // 会打印出来三个不同的地址，表示分配了三次内存空间
 
-    slice_b := [][]int{{10}, {100, 200}}
-    fmt.Printf("slice_b: %v", slice_b)
+    fmt.Println(arrayA)
+    testArray2(&arrayA)
+    fmt.Println(arrayA)
+}
+
+func testArray(x [2]int) {
+    fmt.Printf("func Array: %p, %v\n", &x, x)
+    x[0] = 999
+}
+
+func testArray2(x *[2]int) {
+    fmt.Printf("func Array 2: %p, %v\n", &x, x)
+    (*x)[0] = 999 
 }
