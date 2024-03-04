@@ -12,6 +12,14 @@ func calcWithoutTax(price float64) float64 {
     return price
 }
 
+func selectCalculator(price float64) func(float64) float64 {
+    if (price > 100) {
+        return calcWithTax
+    }
+    return calcWithoutTax
+
+}
+
 func main() {
     products := map[string]float64 {
         "Kayak": 275,
