@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+    "fmt"
     "encoding/json"
     "strings"
 )
@@ -10,11 +10,24 @@ type Product struct {
     name, category string
     price float64
     // otherNames []string
+     *Supplier
+}
+
+type Supplier struct {
+    name, city string
 }
 
 // constructor function
-func newProduct(name, category string, price float64) *Product {
-    return &Product{name, category, price}
+func newProduct(name, category string, price float64, supplier *Supplier) *Product {
+    return &Product{name, category, price - 10, supplier}
+}
+
+func copyProduct(product *Product) Product {
+    p := *product
+    s := *product.Supplier
+
+    p.Supplier = &s
+    return p
 }
 
 func writeName(val struct {
@@ -47,35 +60,35 @@ func main() {
 
     prod := Product { name: "Kayak", category: "Watersports", price: 275.00}
 
-    array := [1]StockLevel {
-        {
-            Product: Product{ "Kayak", "Watersports", 275.00},
-            Alternate: Product{"Lifejacket", "Watersports", 48.95},
-            count: 100,
-        },
-    }
-
-    fmt.Println("Array:", array[0].Product.name)
-
-    slice := []StockLevel {
-        {
-            Product: Product{ "Kayak", "Watersports", 275.00},
-            Alternate: Product{"Lifejacket", "Watersports", 48.95},
-            count: 100,
-        },
-    }
-
-    fmt.Println("Slice:", slice[0].Product.name)
-
-    kvp := map[string]StockLevel {
-        "Kayak": {
-            Product: Product{ "kayak", "Watersports", 275.00},
-            Alternate: Product{ "Lifejacket", "Watersports", 48.95},
-            count: 100,
-        },
-    }
-
-    fmt.Println("Map:", kvp["Kayak"].Product.name)
+    // array := [1]StockLevel {
+    //     {
+    //         Product: Product{ "Kayak", "Watersports", 275.00},
+    //         Alternate: Product{"Lifejacket", "Watersports", 48.95},
+    //         count: 100,
+    //     },
+    // }
+    //
+    // fmt.Println("Array:", array[0].Product.name)
+    //
+    // slice := []StockLevel {
+    //     {
+    //         Product: Product{ "Kayak", "Watersports", 275.00},
+    //         Alternate: Product{"Lifejacket", "Watersports", 48.95},
+    //         count: 100,
+    //     },
+    // }
+    //
+    // fmt.Println("Slice:", slice[0].Product.name)
+    //
+    // kvp := map[string]StockLevel {
+    //     "Kayak": {
+    //         Product: Product{ "kayak", "Watersports", 275.00},
+    //         Alternate: Product{ "Lifejacket", "Watersports", 48.95},
+    //         count: 100,
+    //     },
+    // }
+    //
+    // fmt.Println("Map:", kvp["Kayak"].Product.name)
 
     // 在没有给定值的情况会以0值为初始值
     // kayak := Product {
@@ -112,14 +125,23 @@ func main() {
     calcTax(&p1)
     fmt.Println("p1 with tax:", p1.price)
 
+    acme := &Supplier{"Acme Go", "New York"}
+
     // struct constructor functions
     products := [2]*Product {
-        newProduct("Kayak", "Watersports", 275),
-        newProduct("Hat", "skiing", 42.50),
+        newProduct("Kayak", "Watersports", 275, acme),
+        newProduct("Hat", "skiing", 42.50, acme),
     }
 
     for _, p := range products {
-        fmt.Println("Name:", p.name, "Category:", p.category, "Price:", p.price)
+        fmt.Println("Name:", p.name, "Category:", p.category, "Price:", p.price, "Suplier:", p.Supplier.name, p.Supplier.city)
     }
+
+    var prod1 Product
+    var prod1Ptr *Product
+
+    fmt.Println("Value:", prod1.name, prod1.category, prod1.price)
+    fmt.Println("Pointer:", prod1Ptr)
+
 
 }
