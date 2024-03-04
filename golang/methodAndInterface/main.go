@@ -4,9 +4,26 @@ import (
     "fmt"
 )
 
+
+type Service struct {
+    description string
+    durationMonths int
+    monthlyFee float64
+}
+
 type Product struct {
     name, category string
     price float64
+}
+
+type ProductList []Product
+
+func (products *ProductList) calcCategoryTotals() map[string]float64 {
+    totals := make(map[string]float64)
+    for _,p := range *products {
+        totals[p.category] = totals[p.category] + p.price
+    }
+    return totals
 }
 
 type Supplier struct {
@@ -43,23 +60,33 @@ func (supplier *Supplier) printDetails() {
 
 func main() {
 
-    products := []*Product {
+    // products := []*Product {
+    //     {"Kayak", "Watersports", 275},
+    //     {"Lifejacket", "Watersports", 48.95},
+    //     {"Soccer Ball", "Soccer", 19.50},
+    // }
+    //
+    // for _, p := range products {
+    //     p.printDetails()
+    // }
+    // 
+    // suppliers := []*Supplier {
+    //     {"Acme Co", "New York City"},
+    //     {"BoatCo", "Chicago"},
+    // }
+    //
+    // for _, s := range suppliers {
+    //     s.printDetails()
+    // }
+
+    products := ProductList{
         {"Kayak", "Watersports", 275},
         {"Lifejacket", "Watersports", 48.95},
         {"Soccer Ball", "Soccer", 19.50},
     }
 
-    for _, p := range products {
-        p.printDetails()
-    }
-    
-    suppliers := []*Supplier {
-        {"Acme Co", "New York City"},
-        {"BoatCo", "Chicago"},
-    }
-
-    for _, s := range suppliers {
-        s.printDetails()
+    for category, total := range products.calcCategoryTotals() {
+        fmt.Println("Category:", category, "Total:", total)
     }
 
 }
