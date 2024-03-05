@@ -16,6 +16,7 @@ type Args struct {
     Id string
 }
 
+
 // Book struct holds Book JSON structure
 type Book struct {
     Id string `"json:id,omitempty"`
