@@ -46,9 +46,38 @@ func main() {
 
     description = "This  is  double  spaced"
 
-    splits = strings.SplitN(description, " ", 3)
+    splits = strings.Fields(description)
 
     for _, x := range splits {
         fmt.Println("Split >>" + x + "<<")
     }
+
+    splitter := func(r rune) bool {
+        return r == ' '
+    }
+
+    splits = strings.FieldsFunc(description, splitter)
+    for _, x := range splits {
+        fmt.Println("Field >>" + x + "<<")
+    }
+
+    text := "It was a boat. A small boat."
+
+    mapper := func(r rune) rune {
+        if r == 'b' {
+            return 'c'
+        }
+        return r
+    }
+
+    mapped := strings.Map(mapper, text)
+    fmt.Println("Original:", text)
+    fmt.Println("Mapped:", mapped)
+
+    replacer := strings.NewReplacer("boat", "kayak", "small", "huge")
+
+    replacesd := replacer.Replace(text)
+    fmt.Println("Replaced:", replacesd)
+
+
 }
