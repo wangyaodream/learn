@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <titl>Pro Go</titl>
+        <meta name="viewport" content="width=device-width" />
+        <link rel="stylesheet" href="bootstrap.min.css">
+    </head>
+    <body>
+        <div class="m-1 p-2 bg-primary text-white h2 text-center">
+            Upload File
+        </div>
+        <form action="/forms/upload" method="post" class="p-2" enctype="multipart/form-data">
+            <div class="form-group">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" name="name">
+            </div>
+            <div class="form-group">
+                <label class="form-label">City</label>
+                <input type="text" class="form-control" name="city">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Choose Files</label>
+                <input type="file" class="form-control" name="files" multiple>
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">Upload</button>
+        </form>
+    </body>
+</html>
+

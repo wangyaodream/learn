@@ -1,7 +1,6 @@
 package main
 
 import (
-    "fmt"
     "net/http"
     "io"
 )
@@ -11,21 +10,34 @@ type StringHandler struct {
 }
 
 func (sh StringHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-    Printfln("Method: %v", request.Method)
-    Printfln("URL: %v", request.URL)
-    Printfln("HTTP Version: %v", request.Proto)
-    Printfln("Host: %v", request.Host)
-    for name, val := range request.Header {
-        Printfln("Header: %v, Value: %v", name, val)
-    }
-    Printfln("---")
+    // if (request.URL.Path == "/favicon.ico") {
+    //     Printfln("Request for icon detected - returning 404")
+    //     writer.WriteHeader(http.StatusNotFound)
+    //     return
+    // }
+    // Printfln("Request for %v", request.URL.Path)
+    // io.WriteString(writer, sh.message)
+
+    Printfln("Request for %v", request.URL.Path)
     io.WriteString(writer, sh.message)
-    
-    fmt.Fprintln(writer, "This is test string!")
+    // switch request.URL.Path {
+    //     case "/favicon.ico":
+    //         http.NotFound(writer, request)
+    //     case "/message":
+    //         io.WriteString(writer, sh.message)
+    //     default:
+    //         http.Redirect(writer, request, "/message", http.StatusTemporaryRedirect)
+    // }
 }
 
 func main() {
-    err := http.ListenAndServe(":8000", StringHandler{message: "Hello, World"})
+    http.Handle("/message", StringHandler{"Hello, World"})
+    http.Handle("/favicon.ico", http.NotFoundHandler())
+    http.Handle("/", http.RedirectHandler("/message", http.StatusTemporaryRedirect))
+    fsHandler := http.FileServer(http.Dir("./static"))
+    http.Handle("/files/", http.StripPrefix("/files", fsHandler))
+
+    err := http.ListenAndServe(":5000", nil)
 
     if err != nil {
         Printfln("Error: %v", err.Error())
