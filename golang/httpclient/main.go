@@ -2,12 +2,13 @@ package main
 
 import (
 	//"io"
-	"encoding/json"
+	// "encoding/json"
 	"io"
 	"net/http"
 	"os"
 	"time"
-    "strings"
+    // "strings"
+    // "net/http/cookiejar"
 )
 
 func main() {
@@ -38,15 +39,73 @@ func main() {
     // } else {
     //     Printfln("Error: %v, Status Code: %v", err.Error(), response.StatusCode)
     // }
-    var builder strings.Builder
-    err := json.NewEncoder(&builder).Encode(Products[0])
+
+
+    // var builder strings.Builder
+    // err := json.NewEncoder(&builder).Encode(Products[0])
+    // if (err == nil) {
+    //     // response, err := http.Post("http://localhost:5000/echo", "application/json",            strings.NewReader(builder.String()))
+    //     reqURL, err := url.Parse("http://localhost:5000/echo")
+    //     if (err == nil) {
+    //         req := http.Request {
+    //             Method: http.MethodPost,
+    //             URL: reqURL,
+    //             Header: map[string][]string {
+    //                 "Content-Type": {"application/json"},
+    //             },
+    //             Body: io.NopCloser(strings.NewReader(builder.String())),
+    //         }
+    //         response, err := http.DefaultClient.Do(&req)
+    //         if (err == nil && response.StatusCode == http.StatusOK) {
+    //             io.Copy(os.Stdout, response.Body)
+    //             defer response.Body.Close()
+    //         } else {
+    //             Printfln("Request Error: %v", err.Error())
+    //         }
+    //     } else {
+    //         Printfln("Parse Error: %v", err.Error())
+    //     }
+    //     // if (err == nil && response.StatusCode == http.StatusOK) {
+    //     //     io.Copy(os.Stdout, response.Body)
+    //     //     defer response.Body.Close()
+    //     // } else {
+    //     //     Printfln("Error: %v", err.Error())
+    //     // }
+    // } else {
+    //     Printfln("Encode Error: %v", err.Error())
+    // }
+
+    // Working with cookies
+    // jar, err := cookiejar.New(nil)
+    // if (err == nil) {
+    //     http.DefaultClient.Jar = jar
+    // }
+    //
+    // for i := 0; i < 3; i++ {
+    //     req, err := http.NewRequest(http.MethodGet,
+    //     "http://localhost:5000/cookie", nil)
+    //     if (err == nil) {
+    //         response, err := http.DefaultClient.Do(req)
+    //         if (err == nil && response.StatusCode == http.StatusOK) {
+    //             io.Copy(os.Stdout, response.Body)
+    //             defer response.Body.Close()
+    //         } else {
+    //             Printfln("Request Error: %v", err.Error())
+    //         }
+    //     } else {
+    //         Printfln("Request init error: %v", err.Error())
+    //     }
+    // }
+
+    req, err := http.NewRequest(http.MethodGet,
+    "http://localhost:5000/redirect1", nil)
     if (err == nil) {
-        response, err := http.Post("http://localhost:5000/echo", "application/json",            strings.NewReader(builder.String()))
-        if (err == nil && response.StatusCode == http.StatusOK) {
+        var response *http.Response
+        response, err = http.DefaultClient.Do(req)
+        if (err == nil) {
             io.Copy(os.Stdout, response.Body)
-            defer response.Body.Close()
         } else {
-            Printfln("Error: %v", err.Error())
+            Printfln("Request Error: %v", err.Error())
         }
     } else {
         Printfln("Error: %v", err.Error())
