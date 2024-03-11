@@ -31,6 +31,7 @@ new_out
 log
 photo
 db
+*.db
 test.py
 db_config.json
 main_config.py
