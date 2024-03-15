@@ -6,6 +6,17 @@ import (
 	// "fmt"
 )
 
+func createPointerType(t reflect.Type) reflect.Type {
+    return reflect.PointerTo(t)
+}
+
+func followPointerType(t reflect.Type) reflect.Type {
+    if t.Kind() == reflect.Ptr {
+        return t.Elem()
+    }
+    return t
+}
+
 func IsInt(v reflect.Value) bool {
     switch v.Kind() {
         case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
@@ -218,14 +229,19 @@ func main() {
     // Converting Values
 
     name := "Alice"
-    price := 279
-
-    newVal, ok := convert(price, 100.00)
-    Printfln("Converted %v: %v, %T", ok, newVal, newVal)
-    newVal, ok = convert(name, 100.00)
-    Printfln("Converted %v: %v, %T", ok, newVal, newVal)
-
-    newVal, ok = convert(5000, int8(100))
-    Printfln("Converted %v: %v, %T", ok, newVal, newVal)
+    // price := 279
+    //
+    // newVal, ok := convert(price, 100.00)
+    // Printfln("Converted %v: %v, %T", ok, newVal, newVal)
+    // newVal, ok = convert(name, 100.00)
+    // Printfln("Converted %v: %v, %T", ok, newVal, newVal)
+    //
+    // newVal, ok = convert(5000, int8(100))
+    // Printfln("Converted %v: %v, %T", ok, newVal, newVal)
+    t := reflect.TypeOf(name)
+    Printfln("Original Type: %v", t)
+    pt := createPointerType(t)
+    Printfln("Pointer Type: %v", pt)
+    Printfln("Follow pointer type: %v", followPointerType(pt))
 }
 
