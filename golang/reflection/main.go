@@ -6,6 +6,127 @@ import (
 	// "fmt"
 )
 
+func inspectStructs(structs ...interface{}) {
+    for _, s := range structs {
+        structType := reflect.TypeOf(s)
+        if (structType.Kind() == reflect.Struct) {
+            inspectStructType(structType)
+        }
+    }
+}
+
+func inspectStructType(structType reflect.Type) {
+    Printfln("--- Struct Type: %v", structType)
+    for i := 0;i < structType.NumField(); i++ {
+        field := structType.Field(i)
+        Printfln("Field %v: Name: %v, Type: %v, Exported: %v",
+            field.Index, field.Name, field.Type, field.PkgPath == "")
+    }
+    Printfln("--- End struct Type: %v", structType)
+}
+
+func setMap(m interface{}, key interface{}, val interface{}) {
+    mapValue := reflect.ValueOf(m)
+    keyValue := reflect.ValueOf(key)
+    valValue := reflect.ValueOf(val)
+    if (mapValue.Kind() == reflect.Map &&
+        mapValue.Type().Key() == keyValue.Type() &&
+        mapValue.Type().Elem() == valValue.Type()) {
+        mapValue.SetMapIndex(keyValue, valValue)
+    } else {
+        Printfln("Not a map or mismatched types")
+    }
+}
+
+func removeFromMap(m interface{}, key interface{}) {
+    mapValue := reflect.ValueOf(m)
+    keyValue := reflect.ValueOf(key)
+    if (mapValue.Kind() == reflect.Map &&
+        mapValue.Type().Key() == keyValue.Type()) {
+        mapValue.SetMapIndex(keyValue, reflect.Value{})
+    }
+}
+
+func printMapContents(m interface{}) {
+    mapValue := reflect.ValueOf(m)
+    if (mapValue.Kind() == reflect.Map) {
+        for _, keyVal := range mapValue.MapKeys() {
+            reflectVal := mapValue.MapIndex(keyVal)
+            Printfln("Map Key: %v, Value: %v", keyVal, reflectVal)
+        }
+    } else {
+        Printfln("Not a map")
+    }
+}
+
+func describeMap(m interface{}) {
+    mapType := reflect.TypeOf(m)
+    if (mapType.Kind() == reflect.Map) {
+        Printfln("Key type: %v, val type: %v,", mapType.Key(), mapType.Elem())
+    } else {
+        Printfln("Not a map")
+    }
+}
+
+func findAndSplit(slice interface{}, target interface{}) interface{} {
+    sliceVal := reflect.ValueOf(slice)
+    targetType := reflect.TypeOf(target)
+    if (sliceVal.Kind() == reflect.Slice && sliceVal.Type().Elem() == targetType) {
+        for i := 0;i < sliceVal.Len(); i++ {
+            if sliceVal.Index(i).Interface() == target {
+                return sliceVal.Slice(0, i + 1)
+            }
+        }
+    }
+    return slice
+}
+
+func enumerateStrings(arrayOrSlice interface{}) {
+    arrayOrSliceVal := reflect.ValueOf(arrayOrSlice)
+    if (arrayOrSliceVal.Kind() == reflect.Array || 
+            arrayOrSliceVal.Kind() == reflect.Slice) && 
+            arrayOrSliceVal.Type().Elem().Kind() == reflect.String {
+        for i := 0; i < arrayOrSliceVal.Len(); i++ {
+            Printfln("Element: %v, Value: %v", i, arrayOrSliceVal.Index(i))
+        }
+    }
+
+}
+
+func setValue(arrayOrSlice interface{}, index int, replacement interface{}) {
+    arrayOrSliceVal := reflect.ValueOf(arrayOrSlice)
+    replacementVal := reflect.ValueOf(replacement)
+    if (arrayOrSliceVal.Kind() == reflect.Slice) {
+        elemVal := arrayOrSliceVal.Index(index)
+        if (elemVal.CanSet()) {
+            elemVal.Set(replacementVal)
+        }
+    } else if (arrayOrSliceVal.Kind() == reflect.Ptr &&
+        arrayOrSliceVal.Elem().Kind() == reflect.Array &&
+        arrayOrSliceVal.Elem().CanSet()) {
+            arrayOrSliceVal.Elem().Index(index).Set(replacementVal)
+    }
+}
+
+var stringPtrType = reflect.TypeOf((*string)(nil))
+
+func transformString(val interface{}) {
+    elemVal := reflect.ValueOf(val)
+    if (elemVal.Type() == stringPtrType) {
+        upperStr := strings.ToUpper(elemVal.Elem().String())
+        if (elemVal.Elem().CanSet()) {
+            elemVal.Elem().SetString(upperStr)
+        }
+    }
+}
+
+func checkElemType(val interface{}, arrOrSlice interface{}) bool {
+    elemType := reflect.TypeOf(val)
+    arrOrSliceType := reflect.TypeOf(arrOrSlice)
+    return (arrOrSliceType.Kind() == reflect.Array || arrOrSliceType.Kind() == reflect.Slice) && arrOrSliceType.Elem() == elemType
+
+}
+
 func createPointerType(t reflect.Type) reflect.Type {
     return reflect.PointerTo(t)
 }
@@ -229,6 +350,11 @@ func main() {
     // Converting Values
 
     name := "Alice"
+    city := "London"
+    hobby := "Running"
+
+    slice := []string {name, city, hobby}
+    array := [3]string {name, city, hobby}
     // price := 279
     //
     // newVal, ok := convert(price, 100.00)
@@ -243,5 +369,33 @@ func main() {
     pt := createPointerType(t)
     Printfln("Pointer Type: %v", pt)
     Printfln("Follow pointer type: %v", followPointerType(pt))
+    transformString(&name)
+    Printfln("Follow pointer value: %v", name)
+
+    Printfln("Slice (string): %v", checkElemType("testString", slice))
+    Printfln("Array (string): %v", checkElemType("testString", array))
+    Printfln("Array (int): %v", checkElemType(10, array))
+
+    Printfln("Original slice: %v", slice)
+    newCity := "Paris"
+    setValue(slice, 1, newCity)
+    Printfln("Modified slice: %v", slice)
+
+    Printfln("Original slice: %v", array)
+    newCity = "Rome"
+    setValue(&array, 1, newCity)
+    Printfln("Modified slice: %v", array)
+
+    enumerateStrings(slice)
+    enumerateStrings(array)
+
+    pricesMap := map[string]float64 {
+        "Kayak": 279, "Lifejacket": 100, "Soccer Ball": 20.50,
+    }
+    describeMap(pricesMap)
+
+    printMapContents(pricesMap)
+
+    inspectStructs( Purchase{} )
 }
 
