@@ -6,6 +6,7 @@ type DefaultConfig struct {
 	configData map[string]interface{}
 }
 
+
 func (c *DefaultConfig) get(name string) (result interface{}, found bool) {
 	data := c.configData
 	for _, key := range strings.Split(name, ":") {

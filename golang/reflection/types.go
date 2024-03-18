@@ -15,3 +15,4 @@ type Purchase struct {
     Total float64
     taxRate float64
 }
+

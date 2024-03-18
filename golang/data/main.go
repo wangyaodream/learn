@@ -14,6 +14,7 @@ type Product struct {
     Price float64
 }
 
+
 // func queryDatabase(db *sql.DB, id int) (p Product) {
 //     // products := []Product {}
 //     // rows, err := db.Query(`

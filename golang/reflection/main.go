@@ -6,6 +6,7 @@ import (
 	// "fmt"
 )
 
+
 func inspectFuncType(f interface{}) {
     funcType := reflect.TypeOf(f)
     if (funcType.Kind() == reflect.Func) {
