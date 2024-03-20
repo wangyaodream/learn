@@ -32,13 +32,25 @@ func main() {
 	// var logger logging.Logger = logging.NewDefaultLogger(cfg)
 	// writeMessage(logger, cfg)
 
+    // services.RegisterDefaultServices()
+    //
+    // var cfg config.Configuration
+    // services.Getservice(&cfg)
+    //
+    // var logger logging.Logger
+    // services.Getservice(&logger)
+    //
+    // writeMessage(logger, cfg)
+
     services.RegisterDefaultServices()
+    services.Call(writeMessage)
 
-    var cfg config.Configuration
-    services.Getservice(&cfg)
-
-    var logger logging.Logger
-    services.Getservice(&logger)
-
-    writeMessage(logger, cfg)
+    val := struct {
+        message string
+        logging.Logger
+    }{
+        message: "Hello from the struct",
+    }
+    services.Populate(&val)
+    val.Logger.Debug(val.message)
 }
