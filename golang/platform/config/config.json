@@ -3,6 +3,6 @@
         "level": "debug"
     },
     "main": {
-        "message": "Hello from the config file"
+        "message": "Hello this is a message from config.json file"
     }
 }

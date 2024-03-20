@@ -3,7 +3,9 @@ package main
 import (
 	"platform/config"
 	"platform/logging"
+    "platform/services"
 )
+
 
 func writeMessage(logger logging.Logger, cfg config.Configuration) {
 	section, ok := cfg.GetSection("main")
@@ -20,13 +22,23 @@ func writeMessage(logger logging.Logger, cfg config.Configuration) {
 }
 
 func main() {
-	var cfg config.Configuration
-	var err error
-	cfg, err = config.Load("config/config.json")
-	if err != nil {
-		panic(err)
-	}
+	// var cfg config.Configuration
+	// var err error
+	// cfg, err = config.Load("config/config.json")
+	// if err != nil {
+	// 	panic(err)
+	// }
+	//
+	// var logger logging.Logger = logging.NewDefaultLogger(cfg)
+	// writeMessage(logger, cfg)
 
-	var logger logging.Logger = logging.NewDefaultLogger(cfg)
-	writeMessage(logger, cfg)
+    services.RegisterDefaultServices()
+
+    var cfg config.Configuration
+    services.Getservice(&cfg)
+
+    var logger logging.Logger
+    services.Getservice(&logger)
+
+    writeMessage(logger, cfg)
 }

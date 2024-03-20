@@ -35,9 +35,14 @@ func resolveServiceFromValue(c context.Context, val reflect.Value) (err error) {
 		val.Elem().Set(reflect.ValueOf(c))
 	} else if binding, found := services[serviceType]; found {
 		if binding.lifecycle == Scoped {
-
-		}
-	}
+            resolveScopeService(c, val, binding)
+		} else {
+            val.Elem().Set(invokeFunction(c, binding.factoryFunc)[0])
+        }
+	} else {
+        err = fmt.Errorf("Cannot find service %v", serviceType)
+    }
+    return
 }
 
 func resolveScopeService(c context.Context, val reflect.Value, binding BindingMap) (err error) {
