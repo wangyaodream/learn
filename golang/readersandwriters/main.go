@@ -25,21 +25,23 @@ import (
 
 func main() {
 
-	names := []string{"Kayak", "Lifejacket", "Soccer ball"}
-	numbers := [3]int{10, 20, 30}
-	var byteArray [5]byte
-	copy(byteArray[0:], []byte(names[0]))
-	byteSlice := []byte(names[0])
+	// names := []string{"Kayak", "Lifejacket", "Soccer ball"}
+	// numbers := [3]int{10, 20, 30}
+	// var byteArray [5]byte
+	// copy(byteArray[0:], []byte(names[0]))
+	// byteSlice := []byte(names[0])
 
 	var writer strings.Builder
 	encoder := json.NewEncoder(&writer)
 
-	encoder.Encode(names)
-	encoder.Encode(numbers)
-	encoder.Encode(byteArray)
-	encoder.Encode(byteSlice)
+    dp := DiscountedProduct {
+        Product: &Kayak,
+        Discount: 10.50,
+    }
 
-	fmt.Print(writer.String())
+    encoder.Encode(&dp)
+    fmt.Println(writer.String())
+
 	// // strings.NewReader返回值是一个指针
 	// r := strings.NewReader("Thisisalongstring")
 	// var builder strings.Builder
@@ -66,5 +68,7 @@ func main() {
 	// }
 	//
 	// fmt.Print(writer.String())
+
+
 
 }
