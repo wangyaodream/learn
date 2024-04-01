@@ -1,9 +1,10 @@
 from django.contrib.auth.models import Group, User
 from rest_framework import permissions, viewsets
 
-from django_rest.quickstart.serializer import GroupSerializer, UserSerializer
+from .serializers import GroupSerializer, UserSerializer
 
 # Create your views here.
+
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -12,10 +13,12 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+
 class GroupViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows groups to be viewed or edited.
+    API endpoint that allows group to be viewed or edited.
     """
     queryset = Group.objects.all().order_by('name')
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
+
