@@ -30,18 +30,10 @@ function calculateWinner(squares) {
     return null;
 }
 
-function Board() {
-    const [xIsNext, setXIsNext] = useState(true);
-    const [squares, setSquares] = useState(Array(9).fill(null));
-
-    // 将胜利者显示出来
-    const winner = calculateWinner(squares);
-    let status;
-    if (winner) {
-        status = "Winner:" + winner;
-    } else {
-        status = "Next Player:" + (xIsNext ? "X" : "O");
-    }
+// 由Game传递props
+function Board({ xIsNext, squares, onPlay }) {
+    // const [xIsNext, setXIsNext] = useState(true);
+    // const [squares, setSquares] = useState(Array(9).fill(null));
 
     function handleClick(i) {
         // 当所点击的块已经有值时就让它无法修改
@@ -54,8 +46,20 @@ function Board() {
         } else {
             nextSquares[i] = 'O';
         }
-        setSquares(nextSquares);
-        setXIsNext(!xIsNext)
+        // setSquares(nextSquares);
+
+        // 现在由Game组件去完成这个功能
+        // setXIsNext(!xIsNext)
+        onPlay(nextSquares)
+    }
+    
+    // 将胜利者显示出来
+    const winner = calculateWinner(squares);
+    let status;
+    if (winner) {
+        status = "Winner:" + winner;
+    } else {
+        status = "Next Player:" + (xIsNext ? "X" : "O");
     }
     return (
         <>
@@ -79,14 +83,49 @@ function Board() {
     ); 
 }
 
+// Game作为新的顶级组件，用来存放history
 function Game() {
+    // 跟踪玩家和落子历史
+    // const [xIsNext, setXIsNext] = useState(true);
+    const [history, setHistory] = useState([Array(9).fill(null)]);
+    const [currentMove, setCurrentMove] = useState(0);
+    const xIsNext = currentMove %2 === 0;
+    // 渲染当前落子需要从histroy中读取最后一个squares数组
+    const currentSquares = history[currentMove];
+
+    function handlePlay(nextSquares) {
+        const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+        setHistory(nextHistory);
+        setCurrentMove(nextHistory.length - 1);
+        // setXIsNext(!xIsNext);
+    }
+
+    function jumpTo(nextMove) {
+        setCurrentMove(nextMove);
+        // setXIsNext(nextMove % 2 === 0);
+    }
+    
+    const moves = history.map((squares, move) => {
+        let description;
+        if (move >0) {
+            description = 'Go to move #' + move;
+        } else {
+            description = 'Go to game start';
+        }
+        return (
+            <li>
+                <button onClick={() => jumpTo(move)}>{description}</button>
+            </li>
+        );
+    });
+
     return (
         <div className='game'>
             <div className='game-board'>
-                <Board></Board>
+                <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
             </div>
             <div className='game-info'>
-                <ol>{}</ol>
+                <ol>{moves}</ol>
             </div>
         </div>
     )
