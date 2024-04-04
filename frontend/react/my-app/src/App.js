@@ -1,32 +1,58 @@
 import * as React from 'react'
 
 
-const List = (props) => (
+// const List = ({ list }) => (
+//     <ul>
+//         {list.map((item) => ( 
+//             <Item key={item.objectID} item={item} />
+//         ))}
+//     </ul>
+// );
+const List = ({ list }) => (
     <ul>
-        {props.list.map((item) => ( 
-            <Item key={item.objectID} item={item} />
+        {list.map((item) => ( 
+            <Item 
+                key={item.objectID} 
+                title={item.title}
+                url={item.url}
+                author={item.author}
+                num_comments={item.num_comments}
+                points={item.points} />
         ))}
     </ul>
 );
 
-const Item = (props) => ( 
+// const Item = ({ item }) => ( 
+//     <li>
+//         <span>
+//            <a href={item.url}>{item.title}</a>
+//         </span>
+//         <span>{item.author}</span>
+//         <span>{item.num_comments}</span>
+//         <span>{item.points}</span>
+//     </li>
+// );
+const Item = ({ title, url, author, num_comments, points }) => (
     <li>
         <span>
-           <a href={props.item.url}>{props.item.title}</a>
+           <a href={url}>{title}</a>
         </span>
-        <span>{props.item.author}</span>
-        <span>{props.item.num_comments}</span>
-        <span>{props.item.points}</span>
+        <span>{author}</span>
+        <span>{num_comments}</span>
+        <span>{points}</span>
     </li>
 );
 
-const Search = (props) => {
-    // const [searchTerm, setSearchTerm] = React.useState('');
+
+
+const Search = ({ search, onSearch }) => {
+    // const [] = React.useState('');
     //
     // const handleChange = (event) => {
     //      setSearchTerm(event.target.value);
     // };
-    const {search, onSearch} = props;
+
+    // const {search, onSearch} = props;
 
     return (
         <div>
