@@ -2,6 +2,13 @@ from enum import Enum
 from typing import Union
 
 from fastapi import FastAPI
+from pydantic import BaseModel
+
+class Item(BaseModel):
+    name: str
+    description: str | None = None
+    price: float
+    tax: float | None = None
 
 class ModelName(str, Enum):
     alexnet = "alexnet"
@@ -68,3 +75,16 @@ async def get_model(model_name: ModelName):
 async def read_user_item(item_id: str, needy: str):
     item = {"item_id": item_id, "needy": needy}
     return item
+
+
+@app.post("/items/")
+async def create_item(item: Item):
+    return item
+
+# 查询参数
+@app.get("/items/")
+async def read_items(q: str | None = None):
+    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+    if q:
+        results.update({"q": q})
+    return results
