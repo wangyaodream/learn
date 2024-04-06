@@ -11,9 +11,11 @@ class Quantity:
 
 
 class LineItem:
-    # 绑定描述符
-    weight = Quantity('weight')
-    price = Quantity('price')
+    # 绑定描述符，由于Quantity类实现了__set__方法，所以它是一个描述符
+    # weight = Quantity('weight')
+    # price = Quantity('price')
+    weight = Quantity()
+    price = Quantity()
 
     def __init__(self, description, weight, price):
         self.description = description
