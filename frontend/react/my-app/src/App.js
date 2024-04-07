@@ -1,132 +1,115 @@
-import { useState } from 'react';
-import './App.css';
+import * as React from 'react'
 
-function FilterableProductTable({ products }) {
-    const [filterText, setFileterText] = useState('');
-    const [inStockOnly, setInstockOnly] = useState(false);
+
+// const List = ({ list }) => (
+//     <ul>
+//         {list.map((item) => ( 
+//             <Item key={item.objectID} item={item} />
+//         ))}
+//     </ul>
+// );
+const List = ({ list }) => (
+    // <ul>
+    //     {list.map((item) => ( 
+    //         <Item 
+    //             key={item.objectID} 
+    //             title={item.title}
+    //             url={item.url}
+    //             author={item.author}
+    //             num_comments={item.num_comments}
+    //             points={item.points} />
+    //     ))}
+    // </ul>
+    <ul>
+        {list.map(({ objectID, ...item }) => (
+            <Item key={objectID} {...item} />
+        ))}
+    </ul>
+);
+
+// const Item = ({ item }) => ( 
+//     <li>
+//         <span>
+//            <a href={item.url}>{item.title}</a>
+//         </span>
+//         <span>{item.author}</span>
+//         <span>{item.num_comments}</span>
+//         <span>{item.points}</span>
+//     </li>
+// );
+const Item = ({ title, url, author, num_comments, points }) => (
+    <li>
+        <span>
+           <a href={url}>{title}</a>
+        </span>
+        <span>{author}</span>
+        <span>{num_comments}</span>
+        <span>{points}</span>
+    </li>
+);
+
+
+
+const Search = ({ search, onSearch }) => {
+    // const [] = React.useState('');
+    //
+    // const handleChange = (event) => {
+    //      setSearchTerm(event.target.value);
+    // };
+
+    // const {search, onSearch} = props;
+
     return (
         <div>
-            <SearchBar 
-                filterText={filterText}
-                inStockOnly={inStockOnly}/>
-            <ProductTable 
-                products={products}
-                filterText={filterText}
-                inStockOnly={inStockOnly} />
+            <label htmlFor='search'>Search: </label>
+            <input 
+                id='search' 
+                type='text' 
+                value={search}
+                onChange={onSearch}/>
         </div>
-    );
-}
-
-function ProductCategoryRow({category}) {
-    return (
-        <tr>
-            <th colSpan="2">
-                {category}
-            </th>
-        </tr>
-    );
-}
-
-function ProductRow({ product }) {
-    const name = product.stocked ? product.name : 
-        <span style={{ color: 'red' }}>
-            {product.name}
-        </span>
-
-    return (
-        <tr>
-            <td>{name}</td>
-            <td>{product.price}</td>
-        </tr>
     )
 }
 
-function ProductTable({ products, filterText, inStockOnly }) {
-    const rows = [];
-    let lastCategory = null;
+const App = () => {
+    const stories = [
+        {
+            title: 'React',
+            url: 'https://reactjs.org/',
+            author: 'Jordan Walke',
+            num_comments: 3,
+            points: 4,
+            objectID: 0,
+        },
+        {
+            title: "Redux",
+            url: "https://redux.js.org/",
+            author: "Dan Abramov, Andrew Clark",
+            num_comments: 2,
+            points: 5,
+            objectID:1,
+        },
+    ];
 
+    const [searchTerm, setSearchTerm] = React.useState("");
 
-    products.forEach((product) => {
-        // if (product.category !== lastCategory) {
-        //     rows.push(
-        //         <ProductCategoryRow
-        //             category={product.category}
-        //             key={product.category} />
-        //     );
-        // }
-        // rows.push(
-        //     <ProductRow
-        //         product={product}
-        //         key={product.name} />
-        // );
-        // lastCategory = product.category;
-        if (
-            product.name.toLowerCase().indexOf(
-            filterText.toLowerCase()
-            ) === -1
-        ) {
-            return;
-        }
-        if (inStockOnly && !product.stocked) {
-            return;
-        }
+    const handleSearch = (event) => {
+        setSearchTerm(event.target.value);
+    }
 
-        if (product.category !== lastCategory) {
-            rows.push(
-                <ProductCategoryRow
-                    category={product.category}
-                    key={product.category} />
-            );
-        }
-        rows.push(
-            <ProductRow
-                product={product}
-                key={product.name} />
-        );
-        lastCategory = product.category;
-    });
+    const searchedStories = stories.filter(function (story) {
+        return story.title.toLowerCase().includes(searchTerm.toLowerCase());
+    })
 
     return (
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Price</th>
-                </tr>
-            </thead>
-            <tbody>{rows}</tbody>
-        </table>
+        <div>
+            <h1>My Hacker Stories</h1>
+
+            <Search search={searchTerm} onSearch={handleSearch}/>
+
+            <hr />
+            <List list={searchedStories}/>
+        </div>
     )
 }
-
-function SearchBar({ filterText, inStockOnly }) {
-    return (
-        <form>
-            <input type='text' value={filterText} placeholder='Search...' />
-            <label>
-                <input 
-                    type='checkbox' 
-                    checked={inStockOnly}    />
-                {' '}
-                Only show products in stock
-            </label>
-        </form>
-    );
-}
-
-
-const PRODUCTS = [
-  {category: "Fruits", price: "$1", stocked: true, name: "Apple"},
-  {category: "Fruits", price: "$1", stocked: true, name: "Dragonfruit"},
-  {category: "Fruits", price: "$2", stocked: false, name: "Passionfruit"},
-  {category: "Vegetables", price: "$2", stocked: true, name: "Spinach"},
-  {category: "Vegetables", price: "$4", stocked: false, name: "Pumpkin"},
-  {category: "Vegetables", price: "$1", stocked: true, name: "Peas"}
-];
-
-function App() {
-    return <FilterableProductTable products={PRODUCTS} />;
-    
-}
-
 export default App;
