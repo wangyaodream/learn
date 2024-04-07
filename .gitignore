@@ -36,7 +36,6 @@ test.py
 db_config.json
 main_config.py
 test_data.json
-main.py
 result
 /venv/
 output
