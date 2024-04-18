@@ -1,7 +1,6 @@
 package search
 
 import (
-	"fmt"
 	"log"
 )
 
@@ -28,6 +27,6 @@ func Match(matcher Matcher, feed *Feed, searchTerm string, results chan<- *Resul
 
 func Display(results chan *Result) {
     for result := range results {
-        fmt.Println("%s:\n%s\n\n", result.Field, result.Content)
+        log.Printf("%s:\n%s\n\n", result.Field, result.Content)
     }
 }

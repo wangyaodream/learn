@@ -8,7 +8,7 @@ import (
 var matchers = make(map[string]Matcher)
 
 func Run(searchTerm string) {
-	// get data to search
+	// 获取data目录中的json数据
 	feeds, err := RetrieveFeeds()
 
 	if err != nil {
