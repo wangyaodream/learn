@@ -8,7 +8,7 @@ import (
 var matchers = make(map[string]Matcher)
 
 func Run(searchTerm string) {
-	// get data to search
+	// 获取data目录中的json数据
 	feeds, err := RetrieveFeeds()
 
 	if err != nil {
@@ -43,4 +43,14 @@ func Run(searchTerm string) {
 	}()
 
 	Display(results)
+}
+
+func Register(feedType string, matcher Matcher) {
+    if _, exists := matchers[feedType]; exists {
+        log.Fatal(feedType, "Matcher already registered")
+    }
+
+    log.Println("Register", feedType, "matcher")
+    matchers[feedType] = matcher
+
 }
