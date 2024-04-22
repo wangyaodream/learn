@@ -19,5 +19,11 @@ console.log(greeter(user));
 // Class
 class Student {
     fullName: string;
-    constructor(public firstName, public middleIn)
+    constructor(public firstName, public middleInitial, public lastName) {
+        this.fullName = firstName + " " + middleInitial + " " + lastName;
+    }
 }
+
+let user2 = new Student("Jane", "M", "User");
+
+console.log(user2);
