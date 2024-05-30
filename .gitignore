@@ -39,3 +39,4 @@ test_data.json
 result
 /venv/
 output
+.env
