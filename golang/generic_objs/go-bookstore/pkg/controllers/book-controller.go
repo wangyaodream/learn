@@ -24,7 +24,7 @@ func GetBook(w http.ResponseWriter, r *http.Request) {
 
 func GetBookById(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	bookId := vars["bookid"]
+	bookId := vars["bookId"]
 	ID, err := strconv.ParseInt(bookId, 0, 0)
 	if err != nil {
 		fmt.Println("error while parsing")
@@ -77,8 +77,23 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 
 	bookDetails, db := models.GetBookById(ID)
 
+	// 这部分可以想办法优化
 	if updateBook.Name != "" {
 		bookDetails.Name = updateBook.Name
 	}
 
+	if updateBook.Author != "" {
+		bookDetails.Author = updateBook.Author
+	}
+
+	if updateBook.Publication != "" {
+		bookDetails.Publication = updateBook.Publication
+	}
+
+	db.Save(&bookDetails)
+
+	res, _ := json.Marshal(bookDetails)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(res)
 }

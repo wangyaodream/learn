@@ -15,7 +15,7 @@ var (
 )
 
 func Connect() {
-	err := godotenv.Load("config/.env")
+	err := godotenv.Load("pkg/config/.env")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -24,7 +24,7 @@ func Connect() {
 	db_password := os.Getenv("DATABASE_PASSWORD")
 	db_port := os.Getenv("DATABASE_PORT")
 	db_name := os.Getenv("DATABASE_NAME")
-	dsn := fmt.Sprintf("%s:%s@%s:%s/%s?charset=utf8mb4", db_user, db_password, db_host, db_port, db_name)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=true&loc=Local", db_user, db_password, db_host, db_port, db_name)
 	d, err := gorm.Open("mysql", dsn)
 
 	if err != nil {

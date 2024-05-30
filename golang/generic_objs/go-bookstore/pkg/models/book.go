@@ -31,6 +31,8 @@ func (b *Book) CreateBook() *Book {
 func GetAllBooks() []Book {
 	// 将数据表中的所有数据都取出来
 	var Books []Book
+	// db.Select([]string{"name", "author"}).Find(&Books)
+	// db.Model(&Book{}).Select([]string{"name", "author", "publication"}).Scan(&Books)
 	db.Find(&Books)
 	return Books
 }
