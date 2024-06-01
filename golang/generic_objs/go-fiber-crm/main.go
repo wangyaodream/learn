@@ -11,10 +11,10 @@ import (
 )
 
 func setupRoutes(app *fiber.App) {
-	app.Get(GetLeads)
-	app.Get(GetLead)
-	app.Post(NewLead)
-	app.Delete(DeleteLead)
+	app.Get("/api/v1/lead", lead.GetLeads)
+	app.Get("/api/v1/lead/:id", lead.GetLead)
+	app.Post("/api/v1/lead", lead.NewLead)
+	app.Delete("/api/v1/lead/:id", lead.DeleteLead)
 }
 
 func initDatabase() {
@@ -38,6 +38,4 @@ func main() {
 	setupRoutes(app)
 
 	app.Listen(3000)
-	db, _ := database.DBConn.DB()
-	defer db.Close()
 }
