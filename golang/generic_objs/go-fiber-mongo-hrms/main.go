@@ -11,8 +11,8 @@ import (
 )
 
 type MongoInstance struct {
-	Client
-	Db
+	Client *mongo.Client
+	Db     *mongo.Database
 }
 
 var mg MongoInstance
@@ -32,6 +32,19 @@ func Connect() error {
 	defer cancel()
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoURI))
 
+	err = client.Connect(ctx)
+	db := client.Database(dbName)
+
+	if err != nil {
+		return err
+	}
+
+	mg = MongoInstance{
+		Client: client,
+		Db:     db,
+	}
+
+	return nil
 }
 
 func main() {
