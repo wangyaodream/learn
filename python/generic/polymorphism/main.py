@@ -24,7 +24,7 @@ class Square(Shape):
     def area(self):
         return self.side ** 2
 
-    def __repr__(self):
+    def __str__(self):
         return f"Square({self.side})"
 
 
@@ -36,14 +36,27 @@ class Triangle(Shape):
     def area(self):
         return self.base * self.height * 0.5
 
-    def __repr__(self):
+    def __str__(self):
         return f"Square({self.base}, {self.height})"
+
+
+class Pizza(Circle):
+    def __init__(self, topping, radius):
+        self.topping = topping
+        super().__init__(radius)
+
+    def __str__(self):
+        return f"Pizza {self.topping}:"
+
+
+
+
 # circle是一个shape，但是它并不是square也不是triangle，仅仅是一个circle
 circle = Circle(10)
 square = Square(5)
 
 
-shapes = [Circle(6), Square(7), Triangle(3, 4)]
+shapes = [Circle(6), Square(7), Triangle(3, 4), Pizza('peoperoni', 15)]
 
 for shape in shapes:
     print(shape)
