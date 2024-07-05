@@ -49,4 +49,6 @@ func main() {
 
 	fmt.Println("Insert result: ", insertResult)
 
+	// TODO CRUD
+
 }
