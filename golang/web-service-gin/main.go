@@ -22,6 +22,44 @@ var albums = []album{
 }
 
 
-func getalbums(c *gin.Context) {
+func getAlbums(c *gin.Context) {
+    // 将结构体序列化为JSON
     c.IndentedJSON(http.StatusOK, albums)
+}
+
+func postAlbums(c *gin.Context) {
+    var newAlbum album
+    
+    // 通过BindJSON去直接绑定request中的body，去匹配album类型的newAlbum
+    // 当request的body中没有所匹配的数据时，将会以0值的形式进行添加
+    if err := c.BindJSON(&newAlbum); err != nil {
+        return
+    }
+
+    albums = append(albums, newAlbum)
+    c.IndentedJSON(http.StatusCreated, newAlbum)
+}
+
+func getAlbumByID(c *gin.Context) {
+    // 这里的参数和router中设定的参数名一致，用来捕获参数值
+    id := c.Param("foo")
+
+    for _, a := range albums {
+        if a.ID == id {
+            c.IndentedJSON(http.StatusOK, a)
+            return
+        }
+    }
+
+    c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
+}
+
+
+func main() {
+    router := gin.Default()
+    router.GET("/albums", getAlbums)
+    router.GET("/albums/:foo", getAlbumByID)
+    router.POST("/albums", postAlbums)
+
+    router.Run("localhost:8080")
 }
