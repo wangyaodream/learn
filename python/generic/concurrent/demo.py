@@ -8,11 +8,20 @@ async def process(num: int):
     return f"process-{num}"
 
 
+async def next_process(total: int):
+    for _ in range(total):
+        res = await process(random.randint(1, 999))
+        yield res
+
+
 async def main():
     time_before = perf_counter()
-    for _ in range(4):
-        r = await process(random.randint(1, 999))
-        print(r)
+    # for _ in range(4):
+    #     r = await process(random.randint(1, 999))
+    #     print(r)
+
+    async for i in next_process(4):
+        print(i)
     print(f"Total time (synchronous): {perf_counter() - time_before}")
 
     
