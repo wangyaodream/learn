@@ -2,6 +2,7 @@ import sys
 import unittest
 
 from vector import Vector
+from common.product import Product
 
 
 class TestVector(unittest.TestCase):
@@ -36,3 +37,10 @@ class TestVector(unittest.TestCase):
         v2 = Vector(2, 3)
         v3 = v1.add(v2)
         self.assertEqual(v3.x , 3)
+
+
+class ProductTestCase(unittest.TestCase):
+    def test_work(self):
+        product = Product('shrit', 'XS', 'black')
+        target = product.generate_sku()
+        self.assertEqual(target, 'SHRIT-XS-BLACK')
