@@ -1,4 +1,5 @@
 import os
+import json
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
@@ -69,6 +70,28 @@ def my_encrypt(msg):
     )
 
     return decrypted_by_private_key
+
+def generate_signature(msg, private_key):
+    padding_config = padding.PSS(
+        mgf=padding.MGF1(hashes.SHA256()),
+        salt_length=padding.PSS.MAX_LENGTH,
+    )
+
+    private_key = private_key
+    signature = private_key.sign(
+            msg,
+            padding_config,
+            hashes.SHA256()
+    )
+
+    signed_msg = {
+            'message': list(msg),
+            'signature': signature
+            }
+
+    outbound_msg_to_alice = json.dumps(signed_msg)
+
+    return outbound_msg_to_alice
 
 
 if __name__ == "__main__":
