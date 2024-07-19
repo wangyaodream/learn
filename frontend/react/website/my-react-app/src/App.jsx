@@ -12,6 +12,7 @@ function App() {
             <Button></Button>
             <Student name="yao" age="20" isStudent={false}></Student>
             <Student name="he" age={30} isStudent={true}></Student>
+            <Student name="zhangman" age={18} isStudent={true}></Student>
             <Footer></Footer> 
         </div>
     );
