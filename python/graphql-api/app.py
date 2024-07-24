@@ -13,7 +13,8 @@ from api.queries import (
     getPost_resolver)
 from api.mutations import (
     create_post_resolver,
-    update_post_reslover)
+    update_post_reslover,
+    delete_post_reslover)
 
 
 query = ObjectType("Query")
@@ -22,6 +23,7 @@ query.set_field("listPosts", listPosts_resolver)
 query.set_field("getPost", getPost_resolver)
 mutation.set_field("createPost", create_post_resolver)
 mutation.set_field("updatePost", update_post_reslover)
+mutation.set_field("deletePost", delete_post_reslover)
 
 
 type_defs = load_schema_from_path("schema.graphql")

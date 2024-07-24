@@ -48,3 +48,21 @@ def update_post_reslover(obj, info, id, title=None, description=None):
         }
 
     return payload
+
+
+@convert_kwargs_to_snake_case
+def delete_post_reslover(obj, info, id):
+    try:
+        post = Post.query.get(id)
+        db.session.delete(post)
+        db.session.commit()
+        payload = {
+            "success": True,
+            "post": post.to_dict()
+        }
+    except AttributeError:
+        payload = {
+            "success": False,
+            "errors": ["Post not found"]
+        }
+    return payload
