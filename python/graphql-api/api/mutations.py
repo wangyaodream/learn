@@ -29,12 +29,12 @@ def create_post_resolver(obj, info, title, description):
 
 
 @convert_kwargs_to_snake_case
-def update_post_reslover(obj, info, id, title, description):
+def update_post_reslover(obj, info, id, title=None, description=None):
     try:
         post = Post.query.get(id)
         if post:
-            post.title = title
-            post.description = description
+            post.title = title if title is not None else post.title
+            post.description = description if description is not None else post.description
         db.session.add(post)
         db.session.commit()
         payload = {
