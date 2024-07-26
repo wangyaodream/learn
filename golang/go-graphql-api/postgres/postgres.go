@@ -34,7 +34,7 @@ type User struct {
 }
 
 func (d *Db) GetUsersByName(name string) []User {
-	stmt, err := d.Prepare("SELECT * FORM users WHERE name=$1")
+	stmt, err := d.Prepare("SELECT * FROM users WHERE name=$1")
 	if err != nil {
 		fmt.Println("GetUserByName Preperation Err", err)
 	}
