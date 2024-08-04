@@ -3,7 +3,7 @@ from typing import Any
 
 class Node:
     def __init__(self, data):
-        self._data = data
+        self.data = data
         self.left: Node|None = None
         self.right: Node|None = None
 
@@ -26,7 +26,7 @@ class BST:
             self._add(self._root, data)
 
     def _add(self, node: Node, data):
-        if data < node._data:
+        if data < node.data:
             if node.left is None:
                 node.left = Node(data)
 
@@ -42,8 +42,18 @@ class BST:
         return self._search(self._root, data)
 
     def _search(self, node: Node|None, data: Any):
-        if node is None or node._data == data:
+        if node is None or node.data == data:
             return node
-        if data < node._data:
+        if data < node.data:
             return self._search(node.left, data)
         return self._search
+
+    def delete_minimum(self, data: Any):
+        minimum_node: Node = self._delete_minimum(self._root, data)
+        return minimum_node.data
+
+    def _delete_minimum(self, node: Node, data):
+        if node.left is None:
+            return node
+        self._delete_minimum(node.left, data)
+
