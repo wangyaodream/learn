@@ -14,6 +14,8 @@ type config struct {
 	printUsage bool
 }
 
+var errPosArgSpecified = errors.New("positional arguments specified")
+
 var usageString = fmt.Sprintf(`Usage: %s <integer> [-h|--help]
 A greeter application which prints the name you entered <integer> number of times.
 `, os.Args[0])
@@ -56,7 +58,9 @@ func validateArgs(c config) error {
 
 func parseArgs(w io.Writer, args []string) (config, error) {
 	c := config{}
+    // 可以处理命令行应用程序接收的参数
 	fs := flag.NewFlagSet("greeter", flag.ContinueOnError)
+    // 用于写入任何诊断或输出的消息
 	fs.SetOutput(w)
 	fs.IntVar(&c.numTimes, "n", 0, "Number of times to greet")
 	err := fs.Parse(args)
@@ -64,7 +68,7 @@ func parseArgs(w io.Writer, args []string) (config, error) {
 		return c, err
 	}
 	if fs.NArg() != 0 {
-		return c, errors.New("invalid number of arguments")
+		return c, errPosArgSpecified
 	}
 
 	return c, nil
@@ -111,8 +115,11 @@ func greetUser(c config, name string, w io.Writer) {
 func main() {
 	c, err := parseArgs(os.Stderr, os.Args[1:])
 	if err != nil {
-		fmt.Fprintln(os.Stdout, err)
-		os.Exit(1)
+        // 使用自定义err
+        if errors.Is(err, errPosArgSpecified) {
+            fmt.Fprintln(os.Stdout, err)
+        }
+        os.Exit(1)
 	}
 
 	err = validateArgs(c)
