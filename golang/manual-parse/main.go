@@ -11,10 +11,11 @@ import (
 
 type config struct {
 	numTimes   int
-	printUsage bool
+    name string
 }
 
 var errPosArgSpecified = errors.New("positional arguments specified")
+var errInvaildPosArgSpecified = errors.New("more than one positional argument specified")
 
 var usageString = fmt.Sprintf(`Usage: %s <integer> [-h|--help]
 A greeter application which prints the name you entered <integer> number of times.
@@ -62,14 +63,31 @@ func parseArgs(w io.Writer, args []string) (config, error) {
 	fs := flag.NewFlagSet("greeter", flag.ContinueOnError)
     // 用于写入任何诊断或输出的消息
 	fs.SetOutput(w)
+    // 使用自定义的usage
+    fs.Usage = func() {
+        var usageString = `
+        A greeter application which prints the name you entered a specified number of times.
+
+        Usage of %s: <options> [name]`
+        fmt.Fprintf(w, usageString, fs.Name())
+        fmt.Fprintln(w)
+        fmt.Fprintln(w, "Options: ")
+        fs.PrintDefaults()
+    }
+
 	fs.IntVar(&c.numTimes, "n", 0, "Number of times to greet")
 	err := fs.Parse(args)
 	if err != nil {
 		return c, err
 	}
-	if fs.NArg() != 0 {
-		return c, errPosArgSpecified
+	if fs.NArg() >1 {
+		return c, errInvaildPosArgSpecified
 	}
+
+    if fs.NArg() == 1 {
+        c.name = fs.Arg(0)
+    }
+
 
 	return c, nil
 }
@@ -91,22 +109,19 @@ func getName(r io.Reader, w io.Writer) (string, error) {
 }
 
 func runCmd(r io.Reader, w io.Writer, c config) error {
-	if c.printUsage {
-		printUsage(w)
-		return nil
-	}
-
-	name, err := getName(r, w)
-	if err != nil {
-		return err
-	}
-
-	greetUser(c, name, w)
-	return nil
+    var err error
+    if len(c.name) == 0 {
+        c.name, err = getName(r, w)
+        if err != nil {
+            return err
+        }
+    }
+    greetUser(c, w)
+    return nil
 }
 
-func greetUser(c config, name string, w io.Writer) {
-	msg := fmt.Sprintf("Nice to meet you %s\n", name)
+func greetUser(c config, w io.Writer) {
+	msg := fmt.Sprintf("Nice to meet you %s\n", c.name)
 	for i := 0; i < c.numTimes; i++ {
 		fmt.Fprintln(w, msg)
 	}
