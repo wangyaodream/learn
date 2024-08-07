@@ -1,63 +1,53 @@
 package main
 
 import (
-	"flag"
+	"errors"
 	"fmt"
 	"io"
 	"os"
+	"sub-cmd-example/cmd"
 )
 
 
-func handleCmdA(w io.Writer, args []string) error {
-    var v string
-    fs := flag.NewFlagSet("cmd-a", flag.ContinueOnError)
-    fs.SetOutput(w)
-    fs.StringVar(&v, "verb", "argument-value", "Argument 1")
-    err := fs.Parse(args)
-    if err != nil {
-        return err
-    }
-
-    fmt.Fprintln(w, "Executing command A")
-    return nil
-}
-
-func handleCmdB(w io.Writer, args []string) error {
-    var v string
-    fs := flag.NewFlagSet("cmd-b", flag.ContinueOnError)
-    fs.SetOutput(w)
-    fs.StringVar(&v, "verb", "argument-value", "Argument 1")
-    err := fs.Parse(args)
-    if err != nil {
-        return err
-    }
-    fmt.Fprintln(w, "Executing command B")
-    return nil
-}
+var errInvalidSubCommand = errors.New("Invalid sub-command specified")
 
 func printUsage(w io.Writer) {
-    fmt.Fprintf(w, "Usage: %s [cmd-a|cmd-b] -h\n", os.Args[0])
-    handleCmdA(w, []string{"-h"})
-    handleCmdB(w, []string{"-h"})
+    fmt.Fprintln(w, "Usage: mync [http|grpc] -h")
+    cmd.HandleHttp(w, []string{"-h"})
+    cmd.HandleGrpc(w, []string{"-h"})
+}
+
+func  handleCommand(w io.Writer, args []string) error {
+    var err error
+
+    if len(args) < 1 {
+        err = errInvalidSubCommand
+    } else {
+        switch args[0] {
+        case "http":
+            err = cmd.HandleHttp(w, args[1:])
+        case "grpc":
+            err = cmd.HandleGrpc(w, args[1:])
+        case "-h":
+            printUsage(w)
+        case "--help":
+            printUsage(w)
+        default:
+            err = errInvalidSubCommand
+        }
+    }
+
+    if errors.Is(err, cmd.ErrNoServerSpecified) || errors.Is(err, errInvalidSubCommand) {
+        fmt.Fprintln(w, err)
+        printUsage(w)
+    }
+    return err
+
 }
 
 func main() {
-    var err error
-    if len(os.Args) < 2 {
-        printUsage(os.Stdout)
-        os.Exit(1)
-    }
-    switch os.Args[1] {
-    case "cmd-a":
-        err = handleCmdA(os.Stdout, os.Args[2:])
-    case "cmd-b":
-        err = handleCmdB(os.Stdout, os.Args[2:])
-    default:
-        printUsage(os.Stdout)
-    }
-
+    err := handleCommand(os.Stdout, os.Args[1:])
     if err != nil {
-        fmt.Fprintln(os.Stdout, err)
         os.Exit(1)
     }
 }
