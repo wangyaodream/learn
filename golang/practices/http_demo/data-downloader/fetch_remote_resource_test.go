@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 )
 
 
@@ -22,7 +23,8 @@ func TestFetchRemoteResource(t *testing.T) {
     defer ts.Close()
 
     expected := "Hello world"
-    data, err := fetchRemoteResource(ts.URL)
+    client := createHTTPClientWithTimeout(10 * time.Second)
+    data, err := fetchRemoteResource(client, ts.URL)
     if err != nil {
         t.Fatal(err)
     }
