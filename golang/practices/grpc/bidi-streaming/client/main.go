@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -21,8 +22,6 @@ func setupGrpcConn(addr string) (*grpc.ClientConn, error) {
         log.Printf("Error on connection: %v", err)
     }
 
-    defer conn.Close()
-    
     return conn, nil
 }
 
@@ -68,4 +67,22 @@ func setupChat(r io.Reader, w io.Writer, c pb.UsersClient) error {
     }
 
     return stream.CloseSend()
+}
+
+func main() {
+    if len(os.Args) != 2 {
+        log.Fatal("Must specify a gRPC server address")
+    }
+
+    conn, err := setupGrpcConn(os.Args[1])
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer conn.Close()
+
+    c := getUSerServiceClient(conn)
+    err = setupChat(os.Stdin, os.Stdout, c)
+    if err != nil {
+        log.Fatal(err)
+    }
 }
