@@ -6,7 +6,7 @@ int main(){
     double hotel_rate;
     int code;
 
-    while ((code == menu()) != QUIT)
+    while ((code = menu()) != QUIT)
     {
         switch (code)
         {
