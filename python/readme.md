@@ -6,3 +6,5 @@
 ## 使用FastAPI来构建RESTful应用
 
 TODO 需要创建一个自己的小程序
+
+## 关于python内部机制
