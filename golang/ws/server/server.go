@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"log"
 	"net"
 )
@@ -21,16 +22,20 @@ func process(conn net.Conn) {
 
         recvStr := string(buf[:n])
         fmt.Println("receive data from client:", recvStr)
+        recvStr = recvStr + "[server]"
         conn.Write([]byte(recvStr))
     }
 }
 
 func main() {
     listen, err := net.Listen("tcp", "127.0.0.1:20000")
-    if err != nil {
+    if err != nil && err != io.EOF {
         log.Println("listen failed, err:", err)
         return
-    }
+    } else if err == io.EOF {
+        log.Println("client exited!")
+    }    
+
     log.Println("listening...")
     for {
         conn, err := listen.Accept()
