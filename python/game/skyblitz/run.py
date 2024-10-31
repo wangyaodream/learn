@@ -25,7 +25,7 @@ RED_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(RED_SPACESHIP_IMA
 
 def draw_window(red, yellow):
     """绘制的顺序会相互覆盖"""
-    WIN.fill((255,255,255))
+    WIN.fill((255, 255, 255))
     pygame.draw.rect(WIN, BLACK, BORDER)
 
     WIN.blit(YELLOW_SPACESHIP, (yellow.x, yellow.y))
@@ -45,13 +45,13 @@ def red_handle_movement(keys_pressed, red):
 
 
 def yellow_handle_movement(keys_pressed, yellow):
-    if keys_pressed[pygame.K_LEFT] and yellow.x - VEL - yellow.width > BORDER.x - 15:
+    if keys_pressed[pygame.K_LEFT] and yellow.x - VEL > BORDER.x + BORDER.width:
         yellow.x -= VEL
-    if keys_pressed[pygame.K_RIGHT]:
+    if keys_pressed[pygame.K_RIGHT] and yellow.x + VEL + yellow.width < WIDTH:
         yellow.x += VEL
-    if keys_pressed[pygame.K_UP]:
+    if keys_pressed[pygame.K_UP] and yellow.y - VEL > 0:
         yellow.y -= VEL
-    if keys_pressed[pygame.K_DOWN]:
+    if keys_pressed[pygame.K_DOWN] and yellow.y + VEL + yellow.height < HEIGHT - 15:
         yellow.y += VEL
 
 
