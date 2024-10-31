@@ -17,15 +17,20 @@ RED_SPACESHIP_IMAGE = pygame.image.load(os.path.join('Assets', 'spaceship_red.pn
 YELLOW_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(YELLOW_SPACESHIP_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT)), 90)
 RED_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(RED_SPACESHIP_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT)), 270)
 
-def draw_window():
+
+def draw_window(red, yellow):
     """绘制的顺序会相互覆盖"""
     WIN.fill((255,255,255))
 
-    WIN.blit(YELLOW_SPACESHIP, (200, 100))
-    WIN.blit(RED_SPACESHIP, (400, 100))
+    WIN.blit(YELLOW_SPACESHIP, (yellow.x, yellow.y))
+    WIN.blit(RED_SPACESHIP, (red.x, red.y))
     pygame.display.update()
 
+
 def main():
+    red = pygame.Rect(100, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
+    yellow = pygame.Rect(700, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
+
     clock = pygame.time.Clock()
     run = True
     while run:
@@ -33,7 +38,8 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-        draw_window()
+        red.x += 1
+        draw_window(red, yellow)
 
     pygame.quit()
 
