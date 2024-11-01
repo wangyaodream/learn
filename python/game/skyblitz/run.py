@@ -75,9 +75,11 @@ def main():
                 run = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LCTRL:
-                    pass
+                    bullet = pygame.Rect(red.x + red.width, red.y + red.height/2 - 2, 10, 5)
+                    red_bullets.append(bullet)
                 if event.key == pygame.K_RCTRL:
-                    pass
+                    bullet = pygame.Rect(red.x + red.width, red.y + red.height / 2 - 2, 10, 5)
+                    red_bullets.append(bullet)
         keys_pressed = pygame.key.get_pressed()
         red_handle_movement(keys_pressed, red)
         yellow_handle_movement(keys_pressed, yellow)
