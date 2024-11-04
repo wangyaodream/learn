@@ -29,10 +29,12 @@ RED_SPACESHIP_IMAGE = pygame.image.load(os.path.join('Assets', 'spaceship_red.pn
 YELLOW_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(YELLOW_SPACESHIP_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT)), 90)
 RED_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(RED_SPACESHIP_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT)), 270)
 
+SPACE = pygame.transform.scale(pygame.image.load(os.path.join('Assets', 'space.png')), (WIDTH, HEIGHT))
+
 
 def draw_window(red, yellow, red_bullet, yellow_bullet):
+    WIN.blit(SPACE, (0, 0))
     """绘制的顺序会相互覆盖"""
-    WIN.fill((255, 255, 255))
     pygame.draw.rect(WIN, BLACK, BORDER)
 
     WIN.blit(YELLOW_SPACESHIP, (yellow.x, yellow.y))
@@ -80,12 +82,17 @@ def handle_bullets(red_bullets, yellow_bullets, yellow, red):
             # 如果和子弹相撞，需要做出处理
             pygame.event.post(pygame.event.Event(RED_HIT))
             red_bullets.remove(bullet)
+        # 当子弹到屏幕边缘也需要删除子弹
+        if bullet.x > WIDTH:
+            red_bullets.remove(bullet)
 
     for bullet in yellow_bullets:
         bullet.x -= BULLET_VEL
         if yellow.colliderect(bullet):
             # 如果和子弹相撞，需要做出处理
             pygame.event.post(pygame.event.Event(YELLOW_HIT))
+            yellow_bullets.remove(bullet)
+        if yellow.x < 0:
             yellow_bullets.remove(bullet)
 
 
