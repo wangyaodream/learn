@@ -3,14 +3,17 @@ import os
 import pygame
 
 
+pygame.font.init()
 pygame.display.set_caption("skyblitz pro")
 WIDTH, HEIGHT = 900, 500
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
+WHITE = (255, 255, 255)
 
 BORDER = pygame.Rect(WIDTH//2 - 5, 0, 10, HEIGHT)
+HEALTH_FONT = pygame.font.SysFont('comicsans', 30)
 
 FPS = 60
 VEL = 5
@@ -20,8 +23,8 @@ MAX_BULLETS = 3
 SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 55, 40
 
 # 设定用户event，以此来判断
-RED_HIT = pygame.USEREVENT + 1
-YELLOW_HIT = pygame.USEREVENT + 2
+YELLOW_HIT = pygame.USEREVENT + 1
+RED_HIT = pygame.USEREVENT + 2
 
 YELLOW_SPACESHIP_IMAGE = pygame.image.load(os.path.join('Assets', 'spaceship_yellow.png'))
 RED_SPACESHIP_IMAGE = pygame.image.load(os.path.join('Assets', 'spaceship_red.png'))
@@ -32,10 +35,15 @@ RED_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(RED_SPACESHIP_IMA
 SPACE = pygame.transform.scale(pygame.image.load(os.path.join('Assets', 'space.png')), (WIDTH, HEIGHT))
 
 
-def draw_window(red, yellow, red_bullet, yellow_bullet):
+def draw_window(red, yellow, red_bullet, yellow_bullet, red_health, yellow_health):
     WIN.blit(SPACE, (0, 0))
     """绘制的顺序会相互覆盖"""
     pygame.draw.rect(WIN, BLACK, BORDER)
+
+    red_health_text = HEALTH_FONT.render(f"Health: {red_health}", 1, WHITE)
+    yellow_health_text = HEALTH_FONT.render(f"Health: {yellow_health}", 1, WHITE)
+    WIN.blit(red_health_text, (WIDTH - red_health_text.get_width() - 10, 10))
+    WIN.blit(yellow_health_text, (10, 10))
 
     WIN.blit(YELLOW_SPACESHIP, (yellow.x, yellow.y))
     WIN.blit(RED_SPACESHIP, (red.x, red.y))
@@ -103,6 +111,10 @@ def main():
     red_bullets = []
     yellow_bullets = []
 
+    # 生命值
+    red_health = 10
+    yellow_health = 10
+
     clock = pygame.time.Clock()
     run = True
     while run:
@@ -110,6 +122,7 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+            # 子弹触发事件
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LCTRL and len(red_bullets) < MAX_BULLETS:
                     bullet = pygame.Rect(red.x + red.width, red.y + red.height // 2 - 2, 10, 5)
@@ -118,13 +131,30 @@ def main():
                     bullet = pygame.Rect(yellow.x, yellow.y + yellow.height // 2 - 2, 10, 5)
                     yellow_bullets.append(bullet)
 
+            # 命中处理
+            if event.type == RED_HIT:
+                red_health -= 1
+
+            if event.type == YELLOW_HIT:
+                yellow_health -= 1
+
+        winner_text = ""
+        if red_health <= 0:
+            winner_text = "YELLOW WINS!"
+
+        if yellow_health <= 0:
+            winner_text = "RED WINS!"
+
+        if winner_text != "":
+            pass
+
         keys_pressed = pygame.key.get_pressed()
         red_handle_movement(keys_pressed, red)
         yellow_handle_movement(keys_pressed, yellow)
 
         handle_bullets(red_bullets, yellow_bullets, red, yellow)
 
-        draw_window(red, yellow, red_bullets, yellow_bullets)
+        draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_health)
 
     pygame.quit()
 
