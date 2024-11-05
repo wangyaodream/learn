@@ -1,4 +1,16 @@
-var message = 'Hello wolrd!';
-var heading = document.createElement("h1");
-heading.textContent = message;
-document.body.appendChild(heading);
+enum Month {
+    Jan,
+    Feb,
+    Mar,
+    Apr,
+    May,
+    Jun,
+    Jul,
+    Aug,
+    Sep,
+    Oct,
+    Nov,
+    Dec
+};
+
+
