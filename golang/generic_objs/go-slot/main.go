@@ -19,12 +19,41 @@ func getBet(balance uint) uint {
     return bet
 }
 
-func main() {
-    balance := 200
-    bet := getBet(uint(balance))
-    if bet != 0 {
-        fmt.Println("The bat:", bet)
-    } else {
-        fmt.Println("Bye!")
+func generateSymbolArray(symbols map[string]uint) []string {
+    symbolArr := []string{}
+    for symbol, count := range symbols {
+        for i := uint(0); i < count; i++ {
+            symbolArr = append(symbolArr, symbol) 
+        }
     }
+    return symbolArr
+}
+
+func getSpin(reel )
+
+func main() {
+    symbols := map[string]uint{
+        "A": 4,
+        "B": 7,
+        "C": 12,
+        "D": 20,
+    }
+
+    symbolArr := generateSymbolArray(symbols)
+
+    fmt.Println(symbolArr)
+
+
+    balance := uint(200)
+
+    for balance > 0 {
+        bet := getBet(balance)
+        if bet == 0 {
+            break
+        }
+        balance -= bet
+    }
+
+    fmt.Println("Bye!")
+
 }
