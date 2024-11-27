@@ -1,6 +1,5 @@
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection
-from pydantic.errors import re
 from pymongo import ReturnDocument
 
 from pydantic import BaseModel
