@@ -23,3 +23,18 @@ services:
     ports:
       - "300:3000"
     command: "npm start"
+  backend:
+    image: todo-app/backend
+    build: ./backend
+    volumes:
+      - ./backand/:/usr/src/app
+    expose:
+      - "3001"
+    ports:
+      - "8001:3001"
+    command: "python src/server.py"
+    environment:
+      - DEBUG=true
+    env_file:
+      - path: ./.env
+        required: true
