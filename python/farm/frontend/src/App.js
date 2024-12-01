@@ -18,5 +18,52 @@ function App() {
         setListSummaries(data);
     }
 
+    function handleNewToDoList(newName) {
+        const updateData = async () => {
+            const newListData = {
+                name: newName,
+            };
 
+            await axios.post("/api/lists", newListData);
+            reloadData().catch(console.error)
+        }
+        updateData();
+    }
+
+    function handleDeleteToDoList(id) {
+        const updateData = async () => {
+            await axios.delete(`/api/lists/${id}`);
+            reloadData().catch(console.error);
+        };
+        updateData();
+    }
+
+    function backToList() {
+        setSelectedItem(null);
+        reloadData().catch(console.error);
+    }
+
+    if (selectedItem === null) {
+        return (
+            <div className='App'>
+                <ListToDoLists
+                    listSummaries={listSummaries}
+                    handleSelectList={handleSelectList}
+                    handleNewToDoList={handleNewToDoList}
+                    handleDeleteToDoList={handleDeleteToDoList}
+                />
+            </div>
+        );
+    } else {
+        return (
+            <div className='App'>
+                <ToDoList
+                    selectedItem={selectedItem}
+                    handleBackButton={backToList}
+                />
+            </div>
+        );
+    }
 }
+
+export default App;
