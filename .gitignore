@@ -40,3 +40,4 @@ result
 /venv/
 output
 .env
+*.out
